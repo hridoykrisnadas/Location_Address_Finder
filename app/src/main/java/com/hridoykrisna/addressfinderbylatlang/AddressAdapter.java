@@ -49,6 +49,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
                         + address.getFeatureName()
                         +"\n\n Address: "
                         + address.getAddressLine(0)
+
         );
     }
 
