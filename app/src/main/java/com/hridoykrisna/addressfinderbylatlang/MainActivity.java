@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         altET = findViewById(R.id.altETId);
         altLLT = findViewById(R.id.altLLTId);
 
-
         currentLocationBtn.setOnClickListener(v -> {
 
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
