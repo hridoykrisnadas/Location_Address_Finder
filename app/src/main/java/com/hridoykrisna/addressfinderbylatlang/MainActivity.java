@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         altET = findViewById(R.id.altETId);
         altLLT = findViewById(R.id.altLLTId);
 
+
         currentLocationBtn.setOnClickListener(v -> {
 
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -67,6 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                /*
+                    Location Accuracy:
+                    Best Accuracy -> Network Provide
+                    Second Best -> Criteria Best Provider***
+                    Last -> GPS Provider
+
+                    *** -> Best Providers return location data which are best accurate data Either Network Neither GPS
+
+                */
+
 
                 locationManagerTHis = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
                 criteria = new Criteria();
@@ -96,16 +108,6 @@ public class MainActivity extends AppCompatActivity {
                     altET.setText(locationData.getAltitude() + " Meter");
                     Toast.makeText(getApplicationContext(), "Network Data", Toast.LENGTH_SHORT).show();
                 }
-                if (!isGPSEnabled) {
-                    Toast.makeText(getApplicationContext(), "GPS Disable", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (locationData == null) {
-                        locationData = locationManagerTHis.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        altLLT.setVisibility(View.VISIBLE);
-                        altET.setText(locationData.getAltitude() + " Meter");
-                        Toast.makeText(getApplicationContext(), "GPS Data", Toast.LENGTH_SHORT).show();
-                    }
-                }
 
                 if (locationData == null) {
                     locationManagerTHis = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
@@ -113,9 +115,23 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Provider Data", Toast.LENGTH_SHORT).show();
                 }
 
+                if (!isGPSEnabled) {
+                    Toast.makeText(getApplicationContext(), "GPS Disable", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (locationData == null) {
+                        locationData = locationManagerTHis.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                        altLLT.setVisibility(View.VISIBLE);
+                        altET.setText(locationData.getAltitude() + " Meter");
+                        Toast.makeText(getApplicationContext(), "GPS Data", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
                 if (locationData != null) {
                     getAddress(locationData.getLatitude(), locationData.getLongitude());
                     latEt.setText(locationData.getLatitude() + "");
+                    longEt.setText(locationData.getLongitude() + "");
                 } else {
                     Toast.makeText(getApplicationContext(), "Location Not Found", Toast.LENGTH_SHORT).show();
                 }
