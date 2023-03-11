@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_FINE_COARSE = 1;
     EditText latEt, longEt, altET;
     Button currentLocationBtn, submitBtn;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, recyclerview1;
     LinearLayout altLLT;
 
     Double lat, lon;
-    List<Address> addressList;
+    List<Address> addressList, addressList1;
     AddressAdapter addressAdapter;
 
     //Location
@@ -58,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
         currentLocationBtn.setOnClickListener(v -> {
 
-
-            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_COARSE);
-            }
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_COARSE);
             }
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_COARSE);
+            }
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                     altLLT.setVisibility(View.VISIBLE);
                     altET.setText(locationData.getAltitude() + " Meter");
                     Toast.makeText(getApplicationContext(), "Network Data", Toast.LENGTH_SHORT).show();
-
                 }
                 if (!isGPSEnabled) {
                     Toast.makeText(getApplicationContext(), "GPS Disable", Toast.LENGTH_SHORT).show();
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (locationData != null) {
                     getAddress(locationData.getLatitude(), locationData.getLongitude());
-                    longEt.setText(locationData.getLongitude() + "");
                     latEt.setText(locationData.getLatitude() + "");
                 } else {
                     Toast.makeText(getApplicationContext(), "Location Not Found", Toast.LENGTH_SHORT).show();
@@ -124,15 +122,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        submitBtn.setOnClickListener(v ->{
+        submitBtn.setOnClickListener(v -> {
             altLLT.setVisibility(View.GONE);
+            if (latEt.getText().toString().isEmpty()) {
+                latEt.setError("Please Write Latitude");
+                latEt.requestFocus();
+                return;
+            }
+            if (latEt.getText().toString().isEmpty()) {
+                longEt.setError("Please Write Longitude");
+                longEt.requestFocus();
+                return;
+            }
             lat = Double.parseDouble(latEt.getText().toString());
             lon = Double.parseDouble(longEt.getText().toString());
 
             getAddress(lat, lon);
         });
-
-
     }
 
     private void getAddress(Double lat, Double lon) {
@@ -149,5 +155,4 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 }
